@@ -1,7 +1,7 @@
 #!/bin/bash
 
-url="https://www.worldometers.info/coronavirus/"
+url="https://wise.com/fr/stock/aapl"
 
-cas=$(curl -s $url | grep -oP '(?<=<span style="color:#aaa">)[0-9,]+' | head -n 1)
+price=$(curl -s $url | grep -oP '(?<=<div class="mw-display-3 m-b-1">)[^<]+' | head -n 1)
 
-echo "Nombre total de cas : $cas"
+echo "$price"

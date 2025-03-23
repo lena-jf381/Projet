@@ -18,3 +18,11 @@ Récupérez les modules pythons en tapant
 ```bash
 pip install -r requirements.txt
 ```
+
+Attention, pour que ce programme fonctionne en local, il faut des fichiers contenant les valeurs d'actions technologiques. Ces fichiers sont générés par le programme scraper.sh qu'il faut configurer dans le crontab de la façon suivante
+
+```bash
+crontab -e
+
+*/5 * * * * cd /home/azureuser/projetlinux/Projet && /home/azureuser/projetlinux/Projet/scraper.sh
+```

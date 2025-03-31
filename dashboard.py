@@ -5,7 +5,7 @@ import pandas as pd
 import plotly.express as px
 
 
-app = dash.Dash(__name__)
+app = dash.Dash(_name_)
 
 app.layout = html.Div([
     html.H1("Cours des actions technologiques"),
@@ -34,19 +34,18 @@ def make_line(fig,nom):
 def update_dashboard(n):        
     
     figure = px.scatter()
-    make_line(figure,"Google")
+
     #On ajoute des valeurs technologiques
     make_line(figure,"Apple")
     make_line(figure,"Amazon")
-    
+    make_line(figure,"Google")
     make_line(figure,"Meta")
     make_line(figure,"Microsoft")
     make_line(figure,"Nvidia")    
     
     return [figure]
 
-if __name__ == '__main__':
+if __name__ == '_main_':
     app.run(debug=True, host='0.0.0.0', port=8080)
 else:
     server = app.server
-

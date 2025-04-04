@@ -1,0 +1,1 @@
+Le répertoire report sert à la génération des PDF quotidien et de leur images

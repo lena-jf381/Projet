@@ -14,6 +14,11 @@ Sur windows
 .venv/scripts/activate
 ```
 
+Mettre à jour pip
+```cmd
+python.exe -m pip install --upgrade pip
+```
+
 Récupérez les modules pythons en tapant
 ```bash
 pip install -r requirements.txt

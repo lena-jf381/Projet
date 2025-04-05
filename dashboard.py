@@ -104,10 +104,12 @@ init_date =  datetime.now() - timedelta(days=2)
 
 row_menu = html.Div([
     dbc.Row([
-        dbc.Col(dbc.Button("Rapports PDF quotidiens", id="rapports_button", href="/"), width=2),
-        dbc.Col(dbc.Button("Informations",id="info_button", n_clicks=0), width=2),
-        dbc.Col(dbc.Button("Lien Github", href="https://github.com/lena-jf381/Projet", target="_blank"), width=2),
-    ],justify="end",), 
+        dbc.Col(dbc.Button("Rapports PDF quotidiens", id="rapports_button", href="/"), width=2, class_name="m-1"),
+        dbc.Col(dbc.Button("Téléchargement Données",id="data_button", n_clicks=0), width=2, class_name="m-1"),
+        dbc.Col(dbc.Button("Informations sur le site",id="info_button", n_clicks=0), width=2, class_name="m-1"),
+        dbc.Col(dbc.Button("Lien Github", href="https://github.com/lena-jf381/Projet", target="_blank"), width=2, class_name="m-1"),
+      
+    ],justify="end"), 
 
     # Fenêtre modale pour les rapports quotidients
     dbc.Modal(
@@ -142,9 +144,62 @@ row_menu = html.Div([
             id="modal_info",
             is_open=False,
         ), 
+
+    
+    #Fenêtre modale pour le téléchargement des données
+     dbc.Modal(
+            [
+                dbc.ModalHeader(dbc.ModalTitle("Fichiers de données")),
+                dbc.ModalBody([
+                          html.Label("Ce site se met à jour tout seul grâce à un scraper. Vous pouvez télécharger les données utilisées grâce aux liens ci-dessous.",
+                                    style={'font-size': '14px'}, className="m-2"),
+                          html.Label("Attention, certaines données sont vides car le site où l'on scrappe les données rencontre certains problèmes notamment dans la nuit.", style={'font-size': '14px', 'color':'red'},
+                                      className="m-2"),
+                          html.Ul([
+                                html.Li(html.A("data_apple.csv", href="/data/data_apple.csv", target="_blank")),
+                                html.Li(html.A("data_amazon.csv", href="/data/data_amazon.csv", target="_blank")),
+                                html.Li(html.A("data_google.csv", href="/data/data_google.csv", target="_blank")),
+                                html.Li(html.A("data_meta.csv", href="/data/data_meta.csv", target="_blank")),
+                                html.Li(html.A("data_microsoft.csv", href="/data/data_microsoft.csv", target="_blank")),
+                                html.Li(html.A("data_nvidia.csv", href="/data/data_nvidia.csv", target="_blank")),
+                            ], className="m-2"),
+                            ]),
+                dbc.ModalFooter(
+                    dbc.Button("Close", id="data_btn_close", className="ms-auto", n_clicks=0)
+                ),
+            ],
+            id="modal_download",
+            is_open=False,
+        ), 
+
+    # Fenêtre modale qui se lance au démarrage de l'application avec des URLs de téléchargement si un développeur veut tester l'application mais qu'il n'a pas lancé le scrapper 
+     dbc.Modal(
+            [ 
+                dbc.ModalHeader(dbc.ModalTitle("ATTENTION PAS DE DONNEES",style={'color': 'red'})),
+                dbc.ModalBody([
+                            html.Label("Ce site se met à jour tout seul grâce à un scraper. Vous tentez de lancer l'application en local avant que le scraper ait été lancé. "
+                                "Si vous ne pouvez pas lancer le scrapper, merci de télécharger les fichiers ci-dessous qui sont en provenance de la VM "
+                                " https://vmlinuxlena.eastus.cloudapp.azure.com.",
+                                
+                               style={'font-size': '14px'}, className="m-2")
+                            ,html.Ul([
+                                html.Li(html.A("data_apple.csv", href="https://vmlinuxlena.eastus.cloudapp.azure.com/data/data_apple.csv", target="_blank")),
+                                html.Li(html.A("data_amazon.csv", href="https://vmlinuxlena.eastus.cloudapp.azure.com/data/data_amazon.csv", target="_blank")),
+                                html.Li(html.A("data_google.csv", href="https://vmlinuxlena.eastus.cloudapp.azure.com/data/data_google.csv", target="_blank")),
+                                html.Li(html.A("data_meta.csv", href="https://vmlinuxlena.eastus.cloudapp.azure.com/data/data_meta.csv", target="_blank")),
+                                html.Li(html.A("data_microsoft.csv", href="https://vmlinuxlena.eastus.cloudapp.azure.com/data/data_microsoft.csv", target="_blank")),
+                                html.Li(html.A("data_nvidia.csv", href="https://vmlinuxlena.eastus.cloudapp.azure.com/data/data_nvidia.csv", target="_blank")),
+                            ], className="m-2"),
+                            html.Label("Merci de mettre ces fichiers dans le même répertoire que le dashboard.py pour que l'application fonctionne.",
+                                       style={'font-size': '14px','color':'red'}, className="m-2"),
+                            ]),
+            ],
+            id="modal_data_file_missing",
+            is_open=False,
+        ), 
 ])
 
-# Permet la fermeture de la fenêtre modale pour les rapports
+# Permet l'ouverture/fermeture de la fenêtre modale pour les rapports
 @app.callback(
     Output("modal_rapports", "is_open"),    
     [Input("rapports_button", "n_clicks"), Input("rapports_btn_close", "n_clicks")],
@@ -156,7 +211,7 @@ def toggle_modal_rapports(n1, n2, is_open):
     return is_open
 
 
-# Permet la fermeture de la fenêtre modale pour les infos
+# Permet l'ouverture/fermeturede la fenêtre modale pour les infos
 @app.callback(
     Output("modal_info", "is_open"),    
     [Input("info_button", "n_clicks"), Input("info_btn_close", "n_clicks")],
@@ -168,12 +223,30 @@ def toggle_modal_info(n1, n2, is_open):
     return is_open
 
 
+
+# Permet l'ouverture/fermeture la fenêtre modale pour le téléchargement des données
+@app.callback(
+    Output("modal_download", "is_open"),    
+    [Input("data_button", "n_clicks"), Input("data_btn_close", "n_clicks")],
+    [State("modal_download", "is_open")],
+)
+def toggle_modal_download(n1, n2, is_open):
+    if n1 or n2:
+        return not is_open        
+    return is_open
+
   
 # Permet le téléchargement des rapports
 @server.route("/reports/<path:path>")
 def download(path):
     return send_from_directory('reports', path, as_attachment=False)
 
+# Permet le téléchargement des données
+@server.route("/data/<path:path>")
+def download_data(path):
+    if path.endswith('.csv'):  # On se protège en ne téléchargeant que les fichiers csv
+        return send_from_directory('', path, as_attachment=True)
+    
 
 # Permet l'affichage de la liste des rapports
 @app.callback(
@@ -206,6 +279,17 @@ def get_list_rapports(n_click):
                          )
          )
     return content
+
+
+# Permet l'affichage de la fenêtre modale "data_file_missings"
+@app.callback(
+    Output("modal_data_file_missing", "is_open"),    
+    Input('info_button','style'),  # Grosse astuce. Le style n'est jamais appelé dans notre code. Cet appel a lieu une fois au démarrage de l'application
+    [State("modal_data_file_missing", "is_open")],
+)
+def toggle_modal_data_file_missing(style, is_open):
+    return not os.path.isfile('data_apple.csv')     # Si data_apple.csv
+    
 
 # On initialise le Dashborard
 app.layout = html.Div([
@@ -266,13 +350,6 @@ app.layout = html.Div([
         n_intervals=0
     ),
 
-  
-    html.Div([
-    html.H1("List of Files in Reports Folder"),
-    html.Ul([ html.Li(file) for file in  os.listdir('reports')]),  # Display the files as a list
-    # ...existing layout...
-    ])
-
 ])
 
 
@@ -294,6 +371,7 @@ def update_dashboard(n_intervals, start_date, end_date):
 
     deb_date=  date.fromisoformat(start_date) if start_date is not None else init_date.date()
     fin_date=  date.fromisoformat(end_date) if end_date is not None else datetime.now().date()
+        
     #On ajoute des valeurs technologiques
     apple=get_info_stock("Apple",deb_date,fin_date)
     amazon=get_info_stock("Amazon",deb_date,fin_date)
@@ -309,8 +387,6 @@ def update_dashboard(n_intervals, start_date, end_date):
             meta.figure,meta.text_info, \
             microsoft.figure,microsoft.text_info,\
             nvidia.figure, nvidia.text_info          
-
-
 
 
 if __name__ == '__main__':

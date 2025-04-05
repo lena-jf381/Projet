@@ -24,8 +24,9 @@ Récupérez les modules pythons en tapant
 pip install -r requirements.txt
 ```
 
-Attention, pour que ce programme se mette à jour en local, il faut des fichiers contenant les valeurs d'actions technologiques. Ces fichiers sont générés par le programme scraper.sh qu'il faut configurer dans le crontab.
-Il faut par ailleurs activer la génération des rapports automatiques. Vous trouverez ci-dessous la configuration à mettre dans la cron tab
+Pour que ce programme fonctionne, il faut des données en local. L'application vous proposera de les télécharger sur notre VM si vous n'avez pas lancé scraper.sh
+
+Pour configurer le scraper, il vous faut effectuer les opérations suivantes : 
 
 ```bash
 crontab -e

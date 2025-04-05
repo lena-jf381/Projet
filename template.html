@@ -20,14 +20,18 @@
      
     <body>
         <!-- Content for Static Frame 'header_frame' -->
-        <div id="header_content"><p style="font-size: 24px;">Rapport du {{ DATE_GENERATION }} </p></div>
+        <div id="header_content"><p style="font-size: 24px;">Rapport du {{ DATE_GENERATION }} - {{ ACTION }}</p></div>
      
-        <!-- Content for Static Frame 'footer_frame' 
-        <div id="footer_content">Page <pdf:pagenumber>
-            of <pdf:pagecount> 
-        </div>-->
+        <!-- Content for Static Frame 'footer_frame' -->
+        <div id="footer_content">Page {{ PAGE_CURRENT }} sur {{ PAGE_COUNT }}
+        </div>
      
         <!-- HTML Content -->
         {{ FIGURES }}
+        <div>
+            <p style="font-size: 12px;text-align: center;}">
+                <b>{{ INFO }}</b>
+             </p>
+        </div>
     </body>
     </html>
